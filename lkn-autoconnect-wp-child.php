@@ -122,7 +122,6 @@ final class Lkn_Autoconnect_WP_Child {
      *
      */
     public function init() {
-        // TODO check and save user?
         //echo "init";
         if (!self::$instance->check_environment()) {
             //se não esta logado entra daqui

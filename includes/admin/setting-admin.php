@@ -23,15 +23,13 @@ function lkn_autoconnect_wp_child_add_config_section() {
 
     $hookname = add_submenu_page(
         'lkn-autoconnect-wp-child-config',
-        __('Settings', 'lkn-autoconnect-wp-child'),
-        __('Settings', 'lkn-autoconnect-wp-child'),
+        __('Configurações', 'lkn-autoconnect-wp-child'),
+        __('Configurações', 'lkn-autoconnect-wp-child'),
         'manage_options',
         'lkn-autoconnect-wp-child-config',
         'lkn_autoconnect_wp_child_render_config_page',
         1
     );
-
-    add_action('load-' . $hookname, 'lkn_autoconnect_wp_child_configuration_form_handle');
 }
 
 add_action('admin_menu', 'lkn_autoconnect_wp_child_add_config_section');
@@ -59,20 +57,14 @@ function lkn_autoconnect_wp_child_render_config_page() {
                     </div>
 
                     <div class="input-row-wrap">
-                        <label for="lkn_autoconnect_wp_child_website_input"><?php _e('Admin website', 'lkn-autoconnect-wp-child')?></label>
+                        <label for="lkn_autoconnect_wp_child_website_input"><?php _e('Site administrador', 'lkn-autoconnect-wp-child')?></label>
                         <input name="lkn_autoconnect_wp_child_website" type="text" id="lkn_autoconnect_wp_child_website_input" class="regular-text" value="<?php echo $website; ?>" required readonly>
                     </div>
 
                     <div class="input-row-wrap">
-                        <label for="lkn_autoconnect_wp_child_user_input"><?php _e('User', 'lkn-autoconnect-wp-child')?></label>
+                        <label for="lkn_autoconnect_wp_child_user_input"><?php _e('Usuário', 'lkn-autoconnect-wp-child')?></label>
                         <input name="lkn_autoconnect_wp_child_user" type="text" id="lkn_autoconnect_wp_child_user_input" class="regular-text" value="<?php echo $user; ?>" required readonly>
                     </div>
-
-                    <!-- // TODO maybe delete?
-                    <div class="lkn-autoconnect-wp-child-action-btn">
-                        <?php // submit_button(__('Save'));?>
-                    </div>
-                    -->
                 </div>
             </div>
         </div>
@@ -129,41 +121,4 @@ function lkn_autoconnect_wp_child_render_config_page() {
     }
     </style>
     <?php
-}
-
-// TODO maybe delete?
-function lkn_autoconnect_wp_child_configuration_form_handle() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'lkn_client_save_config')) {
-            if (isset($_POST['lkn_autoconnect_wp_child_website']) && !empty($_POST['lkn_autoconnect_wp_child_website']) && isset($_POST['lkn_autoconnect_wp_child_identifier']) && !empty($_POST['lkn_autoconnect_wp_child_identifier'])) {
-                $userId = get_current_user_id();
-                $adminId = $_POST['lkn_autoconnect_wp_child_identifier'];
-                $website = $_POST['lkn_autoconnect_wp_child_website'];
-
-                if (get_option('lkn_autoconnect_wp_child_login_user') === false) {
-                    add_option('lkn_autoconnect_wp_child_login_user', $userId);
-                } else {
-                    update_option('lkn_autoconnect_wp_child_login_user', $userId);
-                }
-
-                if (get_option('lkn_autoconnect_wp_child_identifier') === false) {
-                    add_option('lkn_autoconnect_wp_child_identifier', $adminId);
-                } else {
-                    update_option('lkn_autoconnect_wp_child_identifier', $adminId);
-                }
-
-                if (get_option('lkn_autoconnect_wp_child_website') === false) {
-                    add_option('lkn_autoconnect_wp_child_website', $website);
-                } else {
-                    update_option('lkn_autoconnect_wp_child_website', $website);
-                }
-
-                echo '<div class="lkn-autoconnect-wp-child-notice-positive">' . __('Settings successfully saved', 'lkn-autoconnect-wp-child') . '</div>';
-            } else {
-                echo '<div class="lkn-autoconnect-wp-child-notice-negative">' . __('Error on save settings', 'lkn-autoconnect-wp-child') . '</div>';
-            }
-        } else {
-            echo '<div class="lkn-autoconnect-wp-child-notice-negative">' . __('Error on save settings', 'lkn-autoconnect-wp-child') . '</div>';
-        }
-    }
 }
