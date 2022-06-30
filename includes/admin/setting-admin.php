@@ -38,8 +38,12 @@ add_action('admin_menu', 'lkn_autoconnect_wp_child_add_config_section');
 
 function lkn_autoconnect_wp_child_render_config_page() {
     $status = get_option('lkn_autoconnect_wp_child_status', 'Disconnected');
-    $user = get_option('lkn_autoconnect_wp_child_login_user', '');
-    $website = get_option('lkn_autoconnect_wp_child_website', ''); ?>
+    $userId = get_option('lkn_autoconnect_wp_child_login_user', '');
+    $website = get_option('lkn_autoconnect_wp_child_website', '');
+
+    if (!empty($userId)) {
+        $user = get_user_by('id', $userId)->user_email;
+    } ?>
 
     <div class="wrap">
         <h1><?php esc_html_e(get_admin_page_title()); ?></h1>
@@ -136,10 +140,10 @@ function lkn_autoconnect_wp_child_configuration_form_handle() {
                 $adminId = $_POST['lkn_autoconnect_wp_child_identifier'];
                 $website = $_POST['lkn_autoconnect_wp_child_website'];
 
-                if (get_option('lkn_client_login_user') === false) {
+                if (get_option('lkn_autoconnect_wp_child_login_user') === false) {
                     add_option('lkn_autoconnect_wp_child_login_user', $userId);
                 } else {
-                    update_option('lkn_client_login_user', $userId);
+                    update_option('lkn_autoconnect_wp_child_login_user', $userId);
                 }
 
                 if (get_option('lkn_autoconnect_wp_child_identifier') === false) {

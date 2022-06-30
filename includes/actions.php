@@ -8,25 +8,30 @@ if (!defined('ABSPATH')) {
 function lkn_autoconnect_wp_child_listen_for_login() {
     // TODO add key connection
     if (isset($_POST['action']) && isset($_POST['data']) && $_POST['action'] === 'generatesso') {
-        $decodedInfo = json_decode(base64_decode($_POST['data']));
-        $origin = $_SERVER['HTTP_ORIGIN'];
+        try {
+            $decodedInfo = json_decode(base64_decode($_POST['data']));
 
-        if (get_option('lkn_autoconnect_wp_child_identifier') === false) {
-            add_option('lkn_autoconnect_wp_child_identifier', $decodedInfo->authkey);
-        } else {
-            update_option('lkn_autoconnect_wp_child_identifier', $decodedInfo->authkey);
-        }
+            if (get_option('lkn_autoconnect_wp_child_identifier') === false) {
+                add_option('lkn_autoconnect_wp_child_identifier', $decodedInfo->auth);
+            } else {
+                update_option('lkn_autoconnect_wp_child_identifier', $decodedInfo->auth);
+            }
 
-        if (get_option('lkn_autoconnect_wp_child_website') === false) {
-            add_option('lkn_autoconnect_wp_child_website', $origin);
-        } else {
-            update_option('lkn_autoconnect_wp_child_website', $origin);
-        }
+            if (get_option('lkn_autoconnect_wp_child_website') === false) {
+                add_option('lkn_autoconnect_wp_child_website', $decodedInfo->origin);
+            } else {
+                update_option('lkn_autoconnect_wp_child_website', $decodedInfo->origin);
+            }
 
-        if (get_option('lkn_autoconnect_wp_child_status') === false) {
-            add_option('lkn_autoconnect_wp_child_status', 'Conectado');
-        } else {
-            update_option('lkn_autoconnect_wp_child_status', 'Conectado');
+            if (get_option('lkn_autoconnect_wp_child_status') === false) {
+                add_option('lkn_autoconnect_wp_child_status', 'Conectado');
+            } else {
+                update_option('lkn_autoconnect_wp_child_status', 'Conectado');
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
         }
     }
 
@@ -40,7 +45,7 @@ function lkn_autoconnect_wp_child_listen_for_login() {
         $authKey = $decodedInfo->auth;
         $origin = $decodedInfo->origin; // get_site_url()
 
-        $userLogin = get_option('lkn_client_login_user');
+        $userLogin = get_option('lkn_autoconnect_wp_child_login_user');
 
         if ($userLogin == false) {
             wp_redirect(admin_url('index.php'));

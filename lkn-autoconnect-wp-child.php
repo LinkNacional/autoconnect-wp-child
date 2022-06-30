@@ -132,7 +132,11 @@ final class Lkn_Autoconnect_WP_Child {
             return;
         }
         $userId = get_current_user_id();
-        add_option('lkn_autoconnect_wp_child_login_user', $userId);
+        if (get_option('lkn_autoconnect_wp_child_login_user') === false) {
+            add_option('lkn_autoconnect_wp_child_login_user', $userId);
+        } else {
+            update_option('lkn_autoconnect_wp_child_login_user', $userId);
+        }
 
         self::$instance->load_files();
         self::$instance->setup_hooks();
